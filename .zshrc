@@ -6,7 +6,7 @@ fi
 # Create a new branch and worktree with the given name
 gwt() {
   local branchName="$1"
-  local filesToCopy=("package.json" ".env" ".nvmrc") # Define your own set of common files here
+  local filesToCopy=(".env.local" ".env") # Define your own set of common files here
 
   if [[ -z "$branchName" ]]; then
     echo "Branch name is required." >&2
