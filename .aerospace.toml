@@ -55,6 +55,10 @@ if.app-name-regex-substring = 'outlook'
 if.window-title-regex-substring = 'reminder'
 run = ['layout floating', 'move-node-to-workspace 1']
 
+[[on-window-detected]]
+if.app-name-regex-substring = 'F5 VPN'
+run = ['layout floating']
+
 # Float any teams windows that do NOT start with `Chat |`, `Activity |`, or `Calendar |`
 # If there are other tabs that you use frequently in the main teams window add them as well.
 # Unfortantely this is the best way to detect a meeting window, since the title is just `Meeting Name | Organization | Account`.
