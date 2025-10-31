@@ -13,11 +13,26 @@ gwt() {
     return 1
   fi
 
+  # Determine base branch (main or master)
+  local baseBranch=""
+  if git show-ref --verify --quiet refs/heads/main; then
+    baseBranch="main"
+  elif git show-ref --verify --quiet refs/heads/master; then
+    baseBranch="master"
+  else
+    echo "Neither 'main' nor 'master' branch found." >&2
+    return 1
+  fi
+
+  # Ensure base branch is up to date (safe for bare/worktree)
+  git fetch origin "$baseBranch"
+  git update-ref "refs/heads/$baseBranch" "origin/$baseBranch"
+
   # Check if branch already exists
   if git branch --list "$branchName" | grep -q "$branchName"; then
     echo "Branch '$branchName' already exists. Re-using the existing branch."
   else
-    git branch "$branchName"
+    git branch "$branchName" "$baseBranch"
     echo "Created new branch: $branchName"
   fi
 
