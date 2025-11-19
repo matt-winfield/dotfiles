@@ -56,8 +56,21 @@ if.window-title-regex-substring = 'reminder'
 run = ['layout floating', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
+if.app-name-regex-substring = 'outlook'
+if.window-title-regex-substring = '(?!reminder)'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
 if.app-name-regex-substring = 'F5 VPN'
 run = ['layout floating']
+
+[[on-window-detected]]
+if.app-name-regex-substring = "firefox"
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-name-regex-substring = "obsidian"
+run = 'move-node-to-workspace 3'
 
 # Float any teams windows that do NOT start with `Chat |`, `Activity |`, or `Calendar |`
 # If there are other tabs that you use frequently in the main teams window add them as well.
@@ -71,6 +84,12 @@ run = ['layout floating']
 if.app-name-regex-substring = 'microsoft teams'
 if.window-title-regex-substring = '^(?!(?:chat|activity|calendar)\s\|).*$'
 run = ['layout floating', 'move-node-to-workspace 1']
+
+# Otherwise move teams to workspace 3
+[[on-window-detected]]
+if.app-name-regex-substring = "microsoft teams"
+if.window-title-regex-substring = '^(?:(?:chat|activity|calendar)\s\|).*$'
+run = 'move-node-to-workspace 3'
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
