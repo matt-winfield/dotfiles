@@ -38,6 +38,8 @@ else
     echo "iTerm2 already installed"
 fi
 
+brew install --cask font-meslo-lg-nerd-font
+
 # Create config directory if it doesn't exist
 mkdir -p ~/.config/karabiner
 
@@ -54,7 +56,7 @@ else
 fi
 
 # Install CLI tools if not already installed
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions; do
+for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim ripgrep; do
     if ! brew list $tool &> /dev/null; then
         echo "Installing $tool..."
         brew install $tool
@@ -62,6 +64,27 @@ for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions; do
         echo "$tool already installed"
     fi
 done
+
+# Initialize nvm in this script
+if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then
+    echo "Initializing nvm..."
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+    
+    echo "Installing and using LTS Node version..."
+    nvm install --lts
+    nvm use --lts
+elif [ -s "/usr/local/opt/nvm/nvm.sh" ]; then
+    # For Intel Macs
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"
+    
+    echo "Installing and using LTS Node version..."
+    nvm install --lts
+    nvm use --lts
+else
+    echo "nvm not found, skipping Node installation"
+fi
 
 # Link starship config
 echo "Linking Starship config..."
@@ -83,6 +106,14 @@ fi
 # Link zshrc
 echo "Linking .zshrc..."
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
+
+# Clone neovim config repo if not already present
+if [ ! -d ~/.config/nvim ]; then
+    echo "Cloning neovim config repo..."
+    git clone https://github.com/matt-winfield/neovim-config.git ~/.config/nvim
+else
+    echo "nvim directory already exists"
+fi
 
 # Disable dock autohide delay
 echo "Configuring Dock..."
