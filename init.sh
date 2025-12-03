@@ -38,7 +38,12 @@ else
     echo "iTerm2 already installed"
 fi
 
-brew install --cask font-meslo-lg-nerd-font
+if ! ls $HOME/Library/Fonts/Meslo*NerdFontMono*.ttf >/dev/null 2>&1; then
+    echo "Installing meslo nerd font..."
+    brew install --cask font-meslo-lg-nerd-font
+else
+    echo "Meslo Nerd Font already installed"
+fi
 
 # Create config directory if it doesn't exist
 mkdir -p ~/.config/karabiner
