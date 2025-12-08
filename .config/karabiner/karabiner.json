@@ -4,6 +4,22 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Cmd+Alt+1 inserts upside-down exclamation (safe for Aerospace)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": { "mandatory": ["command", "option"] }
+                                },
+                                "to": [
+                                    { "key_code": "vk_none" },
+                                    { "shell_command": "osascript -e 'set the clipboard to \"¡\"' -e 'tell application \"System Events\" to keystroke \"v\" using command down'" }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Map Mouse5 to Mute/Unmute and Mouse4 to Video On/Off in Microsoft Teams",
                         "enabled": false,
                         "manipulators": [
