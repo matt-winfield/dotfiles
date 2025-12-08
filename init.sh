@@ -137,6 +137,9 @@ defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
+# Disable hold-key for accented characters (messes with vim hold j / k in vscode)
+defaults write -g ApplePressAndHoldEnabled -bool false
+
 # Disable dock autohide delay
 echo "Configuring Dock..."
 defaults write com.apple.dock autohide-delay -float 0
