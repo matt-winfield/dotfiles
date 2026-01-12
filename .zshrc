@@ -25,7 +25,7 @@ gwt() {
   fi
 
   # Ensure base branch is up to date (safe for bare/worktree)
-  git fetch origin "$baseBranch"
+  git fetch
   git update-ref "refs/heads/$baseBranch" "origin/$baseBranch"
 
   # Check if branch already exists
@@ -141,6 +141,9 @@ load-nvmrc() {
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+# Include Go binaries in the path
+export PATH=$PATH:$HOME/go/bin
 
 alias ls="eza"
 alias lg="lazygit"
