@@ -61,7 +61,8 @@ else
 fi
 
 # Install CLI tools if not already installed
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep; do
+# gum is used in the zshrc file for multi-choice in alias functions
+for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum; do
     if ! brew list $tool &>/dev/null; then
         echo "Installing $tool..."
         brew install $tool

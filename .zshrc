@@ -99,6 +99,39 @@ Git_CloneBareWorktree() {
 
 alias clone-worktree=Git_CloneBareWorktree
 
+# Create a GitHub Pull Request, auto-set the title with JIRA ticket based on branch name
+ghpr() {
+  # ---- Infer JIRA ref from branch ----
+  local branch jira_ref=""
+  branch="$(git branch --show-current 2>/dev/null)"
+
+  if [[ "$branch" =~ ([a-z]+-[0-9]+) ]]; then
+    jira_ref="[${${match[1]}:u}] "
+  fi
+
+  # ---- Last commit subject ----
+  local last_commit
+  last_commit="$(git log -1 --pretty=%s 2>/dev/null)"
+
+  local default_title="${jira_ref}${last_commit}"
+
+  # ---- Draft selector (arrow keys) ----
+  local draft_choice
+  draft_choice="$(gum choose \
+    "Ready for review" \
+    "Draft PR"
+  )" || return 1
+
+  local draft_flag=""
+  [[ "$draft_choice" == "Draft PR" ]] && draft_flag="--draft"
+
+  # ---- Create PR ----
+  gh pr create \
+    --title "$default_title" \
+    --editor \
+    $draft_flag
+}
+
 # Initialise zoxide
 eval "$(zoxide init zsh)"
 
