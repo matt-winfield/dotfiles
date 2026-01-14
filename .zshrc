@@ -129,6 +129,7 @@ ghpr() {
   gh pr create \
     --title "$default_title" \
     --editor \
+    --fill \
     $draft_flag
 }
 
