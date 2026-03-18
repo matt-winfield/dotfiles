@@ -62,7 +62,7 @@ fi
 
 # Install CLI tools if not already installed
 # gum is used in the zshrc file for multi-choice in alias functions
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum middleclick scroll-reverser; do
+for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum middleclick scroll-reverser thaw; do
     if ! brew list $tool &>/dev/null; then
         echo "Installing $tool..."
         brew install $tool
