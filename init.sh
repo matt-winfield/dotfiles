@@ -114,6 +114,14 @@ else
     echo "Aerospace already installed"
 fi
 
+# Link gitconfig
+echo "Linking .gitconfig..."
+ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
+
+# Make git credential helper scripts executable
+chmod +x ~/dotfiles/bin/git-credential-sports-global
+chmod +x ~/dotfiles/bin/git-credential-supergroup
+
 # Link zshrc
 echo "Linking .zshrc..."
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
