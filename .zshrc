@@ -3,6 +3,29 @@ if [[ -f ~/.zsh_secrets ]]; then
   source ~/.zsh_secrets
 fi
 
+# Map of GitHub org -> env var name holding the PAT to use
+# Add entries as: "OrgName" "ENV_VAR_NAME"
+typeset -A GH_ORG_TOKEN_MAP=(
+  "Sports-Global" "SPORTS_GLOBAL_GITHUB_TOKEN"
+  "sg-ltd"        "SUPERGROUP_GITHUB_TOKEN"
+)
+
+# gh wrapper: automatically selects the correct PAT based on the current repo's org
+gh() {
+  local remote_url org token_var token
+  remote_url=$(git remote get-url origin 2>/dev/null || true)
+
+  for org token_var in "${(@kv)GH_ORG_TOKEN_MAP}"; do
+    if [[ "$remote_url" == *"github.com"*"/$org/"* || "$remote_url" == *"github.com"*":$org/"* ]]; then
+      token="${(P)token_var}"
+      GH_TOKEN="$token" command gh "$@"
+      return
+    fi
+  done
+
+  command gh "$@"
+}
+
 # Create a new branch and worktree with the given name
 gwt() {
   local branchName="$1"
