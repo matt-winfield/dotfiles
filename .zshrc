@@ -216,3 +216,4 @@ type starship_zle-keymap-select >/dev/null || \
 
 eval "$(atuin init zsh)"
 export PATH="$HOME/.local/bin:$PATH"
+export NODE_OPTIONS=--use-system-ca
