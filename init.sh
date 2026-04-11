@@ -61,7 +61,8 @@ else
 fi
 
 # Install CLI tools if not already installed
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep; do
+# gum is used in the zshrc file for multi-choice in alias functions
+for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum middleclick scroll-reverser thaw; do
     if ! brew list $tool &>/dev/null; then
         echo "Installing $tool..."
         brew install $tool
@@ -112,6 +113,14 @@ if [ ! -d "/Applications/AeroSpace.app" ]; then
 else
     echo "Aerospace already installed"
 fi
+
+# Link gitconfig
+echo "Linking .gitconfig..."
+ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
+
+# Make git credential helper scripts executable
+chmod +x ~/dotfiles/bin/git-credential-sports-global
+chmod +x ~/dotfiles/bin/git-credential-supergroup
 
 # Link zshrc
 echo "Linking .zshrc..."

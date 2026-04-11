@@ -1,0 +1,29 @@
+[user]
+	email = matt@matt-winfield.com
+	name = Matthew Winfield
+[pull]
+	rebase = false
+
+# Sports-Global organisation (HTTPS + SSH)
+[includeIf "hasconfig:remote.*.url:https://github.com/Sports-Global/**"]
+	path = ~/dotfiles/git/sports-global.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github.com:Sports-Global/**"]
+	path = ~/dotfiles/git/sports-global.gitconfig
+
+# sg-ltd organisation (HTTPS + SSH)
+[includeIf "hasconfig:remote.*.url:https://github.com/sg-ltd/**"]
+	path = ~/dotfiles/git/sports-global.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github.com:sg-ltd/**"]
+	path = ~/dotfiles/git/sports-global.gitconfig
+
+# Enable path-based credential matching so org-specific helpers are selected
+[credential "https://github.com"]
+	useHttpPath = true
+
+# PAT for Sports-Global repos (token loaded from ~/.zsh_secrets as $SPORTS_GLOBAL_GITHUB_TOKEN)
+[credential "https://github.com/Sports-Global"]
+	helper = !~/dotfiles/bin/git-credential-sports-global
+
+# PAT for sg-ltd repos (token loaded from ~/.zsh_secrets as $SUPERGROUP_GITHUB_TOKEN)
+[credential "https://github.com/sg-ltd"]
+	helper = !~/dotfiles/bin/git-credential-supergroup

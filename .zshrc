@@ -3,6 +3,29 @@ if [[ -f ~/.zsh_secrets ]]; then
   source ~/.zsh_secrets
 fi
 
+# Map of GitHub org -> env var name holding the PAT to use
+# Add entries as: "OrgName" "ENV_VAR_NAME"
+typeset -A GH_ORG_TOKEN_MAP=(
+  "Sports-Global" "SPORTS_GLOBAL_GITHUB_TOKEN"
+  "sg-ltd"        "SUPERGROUP_GITHUB_TOKEN"
+)
+
+# gh wrapper: automatically selects the correct PAT based on the current repo's org
+gh() {
+  local remote_url org token_var token
+  remote_url=$(git remote get-url origin 2>/dev/null || true)
+
+  for org token_var in "${(@kv)GH_ORG_TOKEN_MAP}"; do
+    if [[ "$remote_url" == *"github.com"*"/$org/"* || "$remote_url" == *"github.com"*":$org/"* ]]; then
+      token="${(P)token_var}"
+      GH_TOKEN="$token" command gh "$@"
+      return
+    fi
+  done
+
+  command gh "$@"
+}
+
 # Create a new branch and worktree with the given name
 gwt() {
   local branchName="$1"
@@ -25,7 +48,7 @@ gwt() {
   fi
 
   # Ensure base branch is up to date (safe for bare/worktree)
-  git fetch origin "$baseBranch"
+  git fetch
   git update-ref "refs/heads/$baseBranch" "origin/$baseBranch"
 
   # Check if branch already exists
@@ -99,6 +122,40 @@ Git_CloneBareWorktree() {
 
 alias clone-worktree=Git_CloneBareWorktree
 
+# Create a GitHub Pull Request, auto-set the title with JIRA ticket based on branch name
+ghpr() {
+  # ---- Infer JIRA ref from branch ----
+  local branch jira_ref=""
+  branch="$(git branch --show-current 2>/dev/null)"
+
+  if [[ "$branch" =~ ([a-z]+-[0-9]+) ]]; then
+    jira_ref="[${${match[1]}:u}] "
+  fi
+
+  # ---- Last commit subject ----
+  local last_commit
+  last_commit="$(git log -1 --pretty=%s 2>/dev/null)"
+
+  local default_title="${jira_ref}${last_commit}"
+
+  # ---- Draft selector (arrow keys) ----
+  local draft_choice
+  draft_choice="$(gum choose \
+    "Ready for review" \
+    "Draft PR"
+  )" || return 1
+
+  local draft_flag=""
+  [[ "$draft_choice" == "Draft PR" ]] && draft_flag="--draft"
+
+  # ---- Create PR ----
+  gh pr create \
+    --title "$default_title" \
+    --editor \
+    --fill \
+    $draft_flag
+}
+
 # Initialise zoxide
 eval "$(zoxide init zsh)"
 
@@ -141,6 +198,9 @@ load-nvmrc() {
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+# Include Go binaries in the path
+export PATH=$PATH:$HOME/go/bin
 
 alias ls="eza"
 alias lg="lazygit"
@@ -190,3 +250,4 @@ export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
 export PATH="$PATH:/Users/mattw/.lmstudio/bin"
 # End of LM Studio CLI section
 
+export NODE_OPTIONS=--use-system-ca
