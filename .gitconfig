@@ -19,6 +19,7 @@
 # Enable path-based credential matching so org-specific helpers are selected
 [credential "https://github.com"]
 	useHttpPath = true
+	helper = osxkeychain
 
 # PAT for Sports-Global repos (token loaded from ~/.zsh_secrets as $SPORTS_GLOBAL_GITHUB_TOKEN)
 [credential "https://github.com/Sports-Global"]
