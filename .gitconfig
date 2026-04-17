@@ -27,3 +27,5 @@
 # PAT for sg-ltd repos (token loaded from ~/.zsh_secrets as $SUPERGROUP_GITHUB_TOKEN)
 [credential "https://github.com/sg-ltd"]
 	helper = !~/dotfiles/bin/git-credential-supergroup
+[push]
+	autoSetupRemote = true
