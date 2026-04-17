@@ -114,6 +114,10 @@ else
     echo "Aerospace already installed"
 fi
 
+# Set GH editor to vim
+echo "Configuring GH editor..."
+gh config set editor vim
+
 # Link gitconfig
 echo "Linking .gitconfig..."
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig

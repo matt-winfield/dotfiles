@@ -29,3 +29,5 @@
 	helper = !~/dotfiles/bin/git-credential-supergroup
 [push]
 	autoSetupRemote = true
+[core]
+	editor = vim
