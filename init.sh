@@ -130,6 +130,24 @@ chmod +x ~/dotfiles/bin/git-credential-supergroup
 echo "Linking .zshrc..."
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 
+# Link package manager security configs
+echo "Linking .npmrc (npm + pnpm)..."
+ln -sf ~/dotfiles/.npmrc ~/.npmrc
+
+echo "Linking .yarnrc.yml (Yarn Berry)..."
+ln -sf ~/dotfiles/.yarnrc.yml ~/.yarnrc.yml
+
+# pnpm global security settings (written to ~/Library/Preferences/pnpm/rc)
+if command -v pnpm &>/dev/null; then
+    echo "Configuring pnpm security settings..."
+    pnpm config set save-exact true
+    pnpm config set ignore-scripts true
+    pnpm config set minimumReleaseAge 2880
+    pnpm config set trustPolicy no-downgrade
+else
+    echo "pnpm not found — skipping pnpm config (re-run after installing pnpm)"
+fi
+
 # Clone neovim config repo if not already present
 if [ ! -d ~/.config/nvim ]; then
     echo "Cloning neovim config repo..."
