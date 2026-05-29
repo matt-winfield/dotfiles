@@ -10,6 +10,18 @@ typeset -A GH_ORG_TOKEN_MAP=(
   "sg-ltd"        "SUPERGROUP_GITHUB_TOKEN"
 )
 
+# Resolve a GitHub token through the shared resolver.
+gh_token_for_env_var() {
+  local resolver
+  resolver="$(command -v github-access-token 2>/dev/null || true)"
+
+  if [[ -z "$resolver" ]]; then
+    resolver="$HOME/dotfiles/bin/github-access-token"
+  fi
+
+  "$resolver" "$1" 2>/dev/null
+}
+
 # gh wrapper: automatically selects the correct PAT based on the current repo's org
 gh() {
   local remote_url org token_var token
@@ -17,13 +29,56 @@ gh() {
 
   for org token_var in "${(@kv)GH_ORG_TOKEN_MAP}"; do
     if [[ "$remote_url" == *"github.com"*"/$org/"* || "$remote_url" == *"github.com"*":$org/"* ]]; then
-      token="${(P)token_var}"
-      GH_TOKEN="$token" command gh "$@"
-      return
+      if token="$(gh_token_for_env_var "$token_var")"; then
+        GH_TOKEN="$token" GITHUB_TOKEN="$token" command gh "$@"
+        return
+      fi
     fi
   done
 
   command gh "$@"
+}
+
+package_install_with_all_github_tokens() {
+  local sports_token supergroup_token
+  local -a env_args
+
+  if sports_token="$(gh_token_for_env_var SPORTS_GLOBAL_GITHUB_TOKEN)"; then
+    env_args+=(
+      "GITHUB_TOKEN=$sports_token"
+      "SPORTS_GLOBAL_GITHUB_TOKEN=$sports_token"
+    )
+  fi
+
+  if supergroup_token="$(gh_token_for_env_var SUPERGROUP_GITHUB_TOKEN)"; then
+    env_args+=("GH_PKG_SG_LTD_TOKEN=$supergroup_token")
+  fi
+
+  env "${env_args[@]}" "$@"
+}
+
+pnpm() {
+  local pnpm_bin
+  pnpm_bin="$(whence -p pnpm)"
+
+  if [[ "$1" == "install" || "$1" == "i" ]]; then
+    package_install_with_all_github_tokens "$pnpm_bin" "$@"
+    return
+  fi
+
+  "$pnpm_bin" "$@"
+}
+
+yarn() {
+  local yarn_bin
+  yarn_bin="$(whence -p yarn)"
+
+  if [[ $# -eq 0 || "$1" == "install" ]]; then
+    package_install_with_all_github_tokens "$yarn_bin" "$@"
+    return
+  fi
+
+  "$yarn_bin" "$@"
 }
 
 # Create a new branch and worktree with the given name

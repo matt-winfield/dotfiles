@@ -1,6 +1,6 @@
 [user]
-	email = matt@matt-winfield.com
-	name = Matthew Winfield
+	email = Matthew.Winfield@supergroup.com
+	name = Matt Winfield
 [pull]
 	rebase = false
 
@@ -21,11 +21,11 @@
 	useHttpPath = true
 	helper = osxkeychain
 
-# PAT for Sports-Global repos (token loaded from ~/.zsh_secrets as $SPORTS_GLOBAL_GITHUB_TOKEN)
+# PAT for Sports-Global repos (prefers env var, then 1Password "Sports-Global GitHub Access Token")
 [credential "https://github.com/Sports-Global"]
 	helper = !~/dotfiles/bin/git-credential-sports-global
 
-# PAT for sg-ltd repos (token loaded from ~/.zsh_secrets as $SUPERGROUP_GITHUB_TOKEN)
+# PAT for sg-ltd repos (prefers env var, then 1Password "SuperGroup GitHub Access Token")
 [credential "https://github.com/sg-ltd"]
 	helper = !~/dotfiles/bin/git-credential-supergroup
 [push]

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+env_var_name="${1:-}"
+op_item_name="${2:-}"
+
+if [[ -z "$env_var_name" ]]; then
+    echo "usage: github-access-token ENV_VAR_NAME [OP_ITEM_NAME]" >&2
+    exit 2
+fi
+
+if [[ -z "$op_item_name" ]]; then
+    case "$env_var_name" in
+        SPORTS_GLOBAL_GITHUB_TOKEN)
+            op_item_name="Sports-Global GitHub Access Token"
+            ;;
+        SUPERGROUP_GITHUB_TOKEN)
+            op_item_name="SuperGroup GitHub Access Token"
+            ;;
+        *)
+            op_item_name="GitHub Access Token"
+            ;;
+    esac
+fi
+
+if command -v op >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
+    token="$(
+        op item get "$op_item_name" --fields label=token --format json |
+            jq -r '.value'
+    )"
+
+    if [[ -n "$token" && "$token" != "null" ]]; then
+        printf '%s\n' "$token"
+        exit 0
+    fi
+
+    exit 1
+fi
+
+token="${!env_var_name:-}"
+
+if [[ -n "$token" ]]; then
+    printf '%s\n' "$token"
+    exit 0
+fi
+
+exit 1

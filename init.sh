@@ -123,6 +123,7 @@ echo "Linking .gitconfig..."
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 
 # Make git credential helper scripts executable
+chmod +x ~/dotfiles/bin/github-access-token
 chmod +x ~/dotfiles/bin/git-credential-sports-global
 chmod +x ~/dotfiles/bin/git-credential-supergroup
 
