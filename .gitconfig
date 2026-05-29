@@ -23,10 +23,12 @@
 
 # PAT for Sports-Global repos (prefers env var, then 1Password "Sports-Global GitHub Access Token")
 [credential "https://github.com/Sports-Global"]
+	helper =
 	helper = !~/dotfiles/bin/git-credential-sports-global
 
 # PAT for sg-ltd repos (prefers env var, then 1Password "SuperGroup GitHub Access Token")
 [credential "https://github.com/sg-ltd"]
+	helper =
 	helper = !~/dotfiles/bin/git-credential-supergroup
 [push]
 	autoSetupRemote = true
