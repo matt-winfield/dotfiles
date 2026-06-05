@@ -299,7 +299,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH=/Users/mattw/.opencode/bin:$PATH
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk@17/include"
-export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+export JAVA_HOME=$(/usr/libexec/java_home)
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/mattw/.lmstudio/bin"
