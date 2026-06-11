@@ -142,11 +142,8 @@ run = 'move-node-to-workspace 3'
     # '''
 
     alt-t = '''exec-and-forget osascript -e '
-    tell application "iTerm"
+    tell application "Ghostty"
         activate
-        if (count of windows) is not 0 then
-            create window with default profile
-        end if
     end tell'
     '''
 
