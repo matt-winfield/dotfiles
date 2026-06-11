@@ -30,12 +30,12 @@ else
     echo "Dotfiles repo already exists"
 fi
 
-# Install iTerm2 if not already installed
-if [ ! -d "/Applications/iTerm.app" ]; then
-    echo "Installing iTerm2..."
-    brew install --cask iterm2
+# Install Ghostty if not already installed
+if [ ! -d "/Applications/Ghostty.app" ]; then
+    echo "Installing Ghostty..."
+    brew install --cask ghostty
 else
-    echo "iTerm2 already installed"
+    echo "Ghostty already installed"
 fi
 
 if ! ls $HOME/Library/Fonts/Meslo*NerdFontMono*.ttf >/dev/null 2>&1; then
@@ -96,6 +96,11 @@ fi
 echo "Linking Starship config..."
 mkdir -p ~/.config
 ln -sf ~/dotfiles/.config/starship.toml ~/.config/starship.toml
+
+# Link Ghostty config
+echo "Linking Ghostty config..."
+mkdir -p ~/.config/ghostty
+ln -sf ~/dotfiles/.config/ghostty/config.ghostty ~/.config/ghostty/config.ghostty
 
 # Link aerospace config
 echo "Linking Aerospace config..."
