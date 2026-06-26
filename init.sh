@@ -132,6 +132,10 @@ chmod +x ~/dotfiles/bin/github-access-token
 chmod +x ~/dotfiles/bin/git-credential-sports-global
 chmod +x ~/dotfiles/bin/git-credential-supergroup
 
+# Link global gitignore
+echo "Linking .gitignore_global..."
+ln -sf ~/dotfiles/.gitignore_global ~/.gitignore_global
+
 # Link zshrc
 echo "Linking .zshrc..."
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
