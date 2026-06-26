@@ -259,6 +259,7 @@ export PATH=$PATH:$HOME/go/bin
 
 alias ls="eza"
 alias lg="lazygit"
+alias cat="bat"
 # place this after nvm initialization!
 autoload -U add-zsh-hook
 
