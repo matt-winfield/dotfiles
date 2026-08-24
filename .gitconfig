@@ -19,7 +19,8 @@
 # Enable path-based credential matching so org-specific helpers are selected
 [credential "https://github.com"]
 	useHttpPath = true
-	helper = osxkeychain
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
 
 # PAT for Sports-Global repos (prefers env var, then 1Password "Sports-Global GitHub Access Token")
 [credential "https://github.com/Sports-Global"]
@@ -35,3 +36,6 @@
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore_global
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

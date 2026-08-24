@@ -80,6 +80,18 @@ yarn() {
   "$yarn_bin" "$@"
 }
 
+npm() {
+  local npm_bin
+  npm_bin="$(whence -p npm)"
+
+  if [[ "$1" == "install" || "$1" == "i" ]]; then
+    package_install_with_all_github_tokens "$npm_bin" "$@"
+    return
+  fi
+
+  "$npm_bin" "$@"
+}
+
 # Create a new branch and worktree with the given name
 gwt() {
   local branchName="$1"
