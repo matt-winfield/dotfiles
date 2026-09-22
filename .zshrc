@@ -50,7 +50,10 @@ package_install_with_all_github_tokens() {
   fi
 
   if supergroup_token="$(gh_token_for_env_var SUPERGROUP_GITHUB_TOKEN)"; then
-    env_args+=("GH_PKG_SG_LTD_TOKEN=$supergroup_token")
+    env_args+=(
+      "GH_PKG_SG_LTD_TOKEN=$supergroup_token"
+      "pnpm_config_//npm.pkg.github.com/:@sg-ltd:_authToken=$supergroup_token"
+    )
   fi
 
   env "${env_args[@]}" "$@"
@@ -60,10 +63,12 @@ pnpm() {
   local pnpm_bin
   pnpm_bin="$(whence -p pnpm)"
 
-  if [[ "$1" == "install" || "$1" == "i" ]]; then
-    package_install_with_all_github_tokens "$pnpm_bin" "$@"
-    return
-  fi
+  case "$1" in
+    install|i|add|update|up|upgrade|fetch|publish|dlx)
+      package_install_with_all_github_tokens "$pnpm_bin" "$@"
+      return
+      ;;
+  esac
 
   "$pnpm_bin" "$@"
 }
