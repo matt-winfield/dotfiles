@@ -123,6 +123,12 @@ fi
 echo "Configuring GH editor..."
 gh config set editor vim
 
+# Link global agent instructions (shared by Codex and Claude Code)
+echo "Linking AGENTS.md..."
+mkdir -p ~/.codex ~/.claude
+ln -sf ~/dotfiles/AGENTS.md ~/.codex/AGENTS.md
+ln -sf ~/dotfiles/AGENTS.md ~/.claude/CLAUDE.md
+
 # Link gitconfig
 echo "Linking .gitconfig..."
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
