@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:pnpm.io)",
+      "WebFetch(domain:yarnpkg.com)",
+      "Read(//Users/mattw/**)",
+      "Read(//Users/mattw/.config/**)",
+      "Bash(aerospace --version)",
+      "Read(//Applications/**)",
+      "Bash(aerospace list-windows *)"
+    ]
+  }
+}
