@@ -9,6 +9,10 @@ quit-after-last-window-closed = true
 # Reattaches to the "main" session so tabs survive quitting Ghostty.
 command = /opt/homebrew/bin/tmux new-session -A -s main
 
+# Closing Ghostty only detaches from tmux, which keeps everything running,
+# so there's nothing to lose by skipping the "close this window?" prompt
+confirm-close-surface = false
+
 # Make the usual tab shortcuts drive tmux windows instead (tmux prefix is ctrl+b = \x02)
 keybind = super+t=text:\x02c
 keybind = super+w=text:\x02X
