@@ -306,3 +306,9 @@ export PATH="$PATH:/Users/mattw/.lmstudio/bin"
 # End of LM Studio CLI section
 
 export NODE_OPTIONS=--use-system-ca
+
+# Ghostty only loads its shell integration in shells it starts itself, so load
+# it inside tmux too. It sets the pane title tmux shows as the tab name.
+if [[ -n $TMUX && -n $GHOSTTY_RESOURCES_DIR ]]; then
+  source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+fi
