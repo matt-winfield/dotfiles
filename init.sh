@@ -62,7 +62,7 @@ fi
 
 # Install CLI tools if not already installed
 # gum is used in the zshrc file for multi-choice in alias functions
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum vorssaint thaw bat; do
+for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum vorssaint thaw bat tmux; do
     if ! brew list $tool &>/dev/null; then
         echo "Installing $tool..."
         brew install $tool
@@ -101,6 +101,10 @@ ln -sf ~/dotfiles/.config/starship.toml ~/.config/starship.toml
 echo "Linking Ghostty config..."
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/.config/ghostty/config.ghostty ~/.config/ghostty/config.ghostty
+
+# Link tmux config (Ghostty runs inside tmux)
+echo "Linking tmux config..."
+ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 
 # Link aerospace config
 echo "Linking Aerospace config..."
