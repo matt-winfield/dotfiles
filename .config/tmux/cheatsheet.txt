@@ -1,0 +1,25 @@
+  Tabs (tmux windows)
+    cmd+t                 New tab
+    cmd+w                 Close tab / pane
+    cmd+1 … cmd+9         Go to tab
+    cmd+shift+] / [       Next / previous tab
+    ctrl+b ,              Rename tab
+
+  Splits (tmux panes)
+    ctrl+b |              Split side by side
+    ctrl+b -              Split top / bottom
+    ctrl+b arrows         Move between splits
+    ctrl+b z              Zoom split to fill window
+    mouse drag border     Resize split
+
+  Session
+    ctrl+b d              Detach (keeps running)
+    ctrl+b s              Pick a session
+    ctrl+b [              Scroll / copy mode (q exits)
+    ctrl+b r              Reload tmux config
+
+  Help
+    cmd+/  or  ctrl+b h   This cheat sheet
+    ctrl+b ?              Every tmux binding
+
+  Press any key to close

@@ -62,7 +62,7 @@ fi
 
 # Install CLI tools if not already installed
 # gum is used in the zshrc file for multi-choice in alias functions
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum middleclick scroll-reverser thaw bat; do
+for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum vorssaint thaw bat tmux; do
     if ! brew list $tool &>/dev/null; then
         echo "Installing $tool..."
         brew install $tool
@@ -102,6 +102,10 @@ echo "Linking Ghostty config..."
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/.config/ghostty/config.ghostty ~/.config/ghostty/config.ghostty
 
+# Link tmux config (Ghostty runs inside tmux)
+echo "Linking tmux config..."
+ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
+
 # Link aerospace config
 echo "Linking Aerospace config..."
 ln -sf ~/dotfiles/.aerospace.toml ~/.aerospace.toml
@@ -122,6 +126,21 @@ fi
 # Set GH editor to vim
 echo "Configuring GH editor..."
 gh config set editor vim
+
+# Link global agent instructions (shared by Codex and Claude Code)
+echo "Linking AGENTS.md..."
+mkdir -p ~/.codex ~/.claude
+ln -sf ~/dotfiles/AGENTS.md ~/.codex/AGENTS.md
+ln -sf ~/dotfiles/AGENTS.md ~/.claude/CLAUDE.md
+
+# Link Claude Code settings and the hook scripts they reference
+echo "Linking Claude Code settings..."
+mkdir -p ~/.claude/hooks
+ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
+for hook in ~/dotfiles/claude/hooks/*.sh; do
+    chmod +x "$hook"
+    ln -sf "$hook" ~/.claude/hooks/"$(basename "$hook")"
+done
 
 # Link gitconfig
 echo "Linking .gitconfig..."

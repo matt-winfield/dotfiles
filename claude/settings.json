@@ -1,0 +1,177 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(corepack enable:*)",
+      "Bash(yarn set:*)",
+      "Bash(yarn install:*)",
+      "Bash(yarn workspace:*)",
+      "Bash(yarn tsc:*)",
+      "Bash(timeout 15 yarn dev:*)",
+      "Bash(yarn test:run:*)",
+      "Bash(yarn lint:*)",
+      "Bash(yarn dlx oxlint:*)",
+      "Bash(yarn typecheck:*)",
+      "Bash(yarn dev:desktop:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh label list:*)",
+      "Bash(gh label create:*)",
+      "Bash(gh issue close:*)",
+      "Bash(yarn build:*)",
+      "Bash(yarn dev)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(yarn add:*)",
+      "Bash(java -version:*)",
+      "Bash(/usr/libexec/java_home:*)",
+      "Bash(./gradlew :capacitor-filesystem:dependencies:*)",
+      "Bash(./gradlew:*)",
+      "Bash(npx cap:*)",
+      "WebFetch(domain:capacitorjs.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(node --version:*)",
+      "Bash(npm view:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(find:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ],
+    "defaultMode": "auto",
+    "env": {
+      "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    }
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prevent-sleep.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude UserPromptSubmit; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/allow-sleep.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude Stop; fi",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/mattw/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude StopFailure; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude SessionEnd; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$PASEO_TERMINAL_ID\" ]; then \"${PASEO_HOOK_CLI:-paseo}\" hooks claude Notification; fi",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true,
+    "image-preview@better-claude": true,
+    "sub-meter@better-claude": true,
+    "commit@better-claude": true
+  },
+  "extraKnownMarketplaces": {
+    "better-claude": {
+      "source": {
+        "source": "github",
+        "repo": "midudev/better-claude"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
+  "editorMode": "vim",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
+}
