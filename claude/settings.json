@@ -156,14 +156,21 @@
     "figma@claude-plugins-official": true,
     "sentry@claude-plugins-official": true,
     "image-preview@better-claude": true,
-    "sub-meter@better-claude": true,
-    "commit@better-claude": true
+    "commit@better-claude": true,
+    "worktrees@matt-winfield-skills": true,
+    "sub-meter@matt-winfield-skills": true
   },
   "extraKnownMarketplaces": {
     "better-claude": {
       "source": {
         "source": "github",
         "repo": "midudev/better-claude"
+      }
+    },
+    "matt-winfield-skills": {
+      "source": {
+        "source": "github",
+        "repo": "matt-winfield/skills"
       }
     }
   },
