@@ -219,10 +219,10 @@ run = 'move-node-to-workspace 3'
     # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
     #s = ['layout sticky tiling', 'mode main']
 
-    alt-shift-h = ['move-workspace-to-monitor --wrap-around left', 'mode main']
-    alt-shift-j = ['move-workspace-to-monitor --wrap-around down', 'mode main']
-    alt-shift-k = ['move-workspace-to-monitor --wrap-around up', 'mode main']
-    alt-shift-l = ['move-workspace-to-monitor --wrap-around right', 'mode main']
+    alt-h = 'move-workspace-to-monitor --wrap-around left'
+    alt-j = 'move-workspace-to-monitor --wrap-around down'
+    alt-k = 'move-workspace-to-monitor --wrap-around up'
+    alt-l = 'move-workspace-to-monitor --wrap-around right'
 
     down = 'volume down'
     up = 'volume up'
