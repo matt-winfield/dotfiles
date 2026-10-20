@@ -239,8 +239,10 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH="$PATH:/Users/mattw/.lmstudio/bin"
 # End of LM Studio CLI section
 
-export NODE_OPTIONS=--use-system-ca
-export NODE_EXTRA_CA_CERTS="$HOME/corp-ca-bundle.pem"
+# Machine-only settings (not tracked), e.g. installer-added PATH entries.
+if [[ -f ~/.zshrc.local ]]; then
+  source ~/.zshrc.local
+fi
 
 # Ghostty only loads its shell integration in shells it starts itself, so load
 # it inside tmux too. It sets the pane title tmux shows as the tab name.
