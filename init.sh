@@ -196,6 +196,17 @@ echo "Linking Cursor hooks..."
 mkdir -p ~/.cursor
 ln -sf ~/dotfiles/cursor/hooks.json ~/.cursor/hooks.json
 
+# Shared skills. Cursor loads ~/.agents/skills and ~/.claude/skills.
+# Claude Code loads ~/.claude/skills, which points at the shared copy.
+echo "Linking agent skills..."
+mkdir -p ~/.agents/skills ~/.claude/skills
+for skill in ~/dotfiles/skills/*/; do
+    [ -d "$skill" ] || continue
+    name="$(basename "$skill")"
+    ln -sfn "$skill" ~/.agents/skills/"$name"
+    ln -sfn "../../.agents/skills/$name" ~/.claude/skills/"$name"
+done
+
 # Link gitconfig
 echo "Linking .gitconfig..."
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
