@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "stop": [
+      {
+        "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true",
+        "timeout": 5
+      }
+    ]
+  }
+}

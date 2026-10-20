@@ -191,6 +191,11 @@ for hook in ~/dotfiles/claude/hooks/*.sh; do
     ln -sf "$hook" ~/.claude/hooks/"$(basename "$hook")"
 done
 
+# Link Cursor CLI hooks (also used by the IDE agent)
+echo "Linking Cursor hooks..."
+mkdir -p ~/.cursor
+ln -sf ~/dotfiles/cursor/hooks.json ~/.cursor/hooks.json
+
 # Link gitconfig
 echo "Linking .gitconfig..."
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
