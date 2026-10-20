@@ -8,7 +8,7 @@ case ":$PATH:" in
   *) export PATH="$HOME/dotfiles/bin:$PATH" ;;
 esac
 
-# Work laptop: 1Password package-manager wrappers, pnpm, and the Android SDK.
+# Work laptop: GitHub CLI package-manager wrappers, pnpm, and the Android SDK.
 source "$HOME/dotfiles/machine-profile.sh"
 if [[ "$(dotfiles_machine_profile)" == "work" ]]; then
   source "$HOME/dotfiles/.zshrc.work"

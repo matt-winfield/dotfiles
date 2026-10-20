@@ -3,40 +3,64 @@
 set -euo pipefail
 
 env_var_name="${1:-}"
-op_item_name="${2:-}"
 
 if [[ -z "$env_var_name" ]]; then
-    echo "usage: github-access-token ENV_VAR_NAME [OP_ITEM_NAME]" >&2
+    echo "usage: github-access-token ENV_VAR_NAME" >&2
     exit 2
 fi
 
-if [[ -z "$op_item_name" ]]; then
-    case "$env_var_name" in
-        SPORTS_GLOBAL_GITHUB_TOKEN)
-            op_item_name="Sports-Global GitHub Access Token"
-            ;;
-        SUPERGROUP_GITHUB_TOKEN)
-            op_item_name="SuperGroup GitHub Access Token"
-            ;;
-        *)
-            op_item_name="GitHub Access Token"
-            ;;
-    esac
-fi
+# Homebrew gh, not ~/dotfiles/bin/gh, so this cannot recurse through the wrapper.
+gh_bin="/opt/homebrew/bin/gh"
+gh_user=""
 
-if command -v op >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
-    token="$(
-        op item get "$op_item_name" --fields label=token --format json |
-            jq -r '.value'
-    )"
+case "$env_var_name" in
+    SPORTS_GLOBAL_GITHUB_TOKEN)
+        gh_user="Matt-Winfield-Derivco"
+        ;;
+    SUPERGROUP_GITHUB_TOKEN)
+        gh_user="Matthew-Winfield_sgltd"
+        ;;
+esac
 
-    if [[ -n "$token" && "$token" != "null" ]]; then
-        printf '%s\n' "$token"
-        exit 0
+if [[ -n "$gh_user" && -x "$gh_bin" ]]; then
+    if token="$("$gh_bin" auth token --hostname github.com --user "$gh_user" 2>/dev/null)"; then
+        if [[ -n "$token" ]]; then
+            printf '%s\n' "$token"
+            exit 0
+        fi
     fi
-
-    exit 1
 fi
+
+# 1Password lookup, kept for reference. GitHub CLI accounts above replace it.
+# op_item_name="${2:-}"
+#
+# if [[ -z "$op_item_name" ]]; then
+#     case "$env_var_name" in
+#         SPORTS_GLOBAL_GITHUB_TOKEN)
+#             op_item_name="Sports-Global GitHub Access Token"
+#             ;;
+#         SUPERGROUP_GITHUB_TOKEN)
+#             op_item_name="SuperGroup GitHub Access Token"
+#             ;;
+#         *)
+#             op_item_name="GitHub Access Token"
+#             ;;
+#     esac
+# fi
+#
+# if command -v op >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
+#     token="$(
+#         op item get "$op_item_name" --fields label=token --format json |
+#             jq -r '.value'
+#     )"
+#
+#     if [[ -n "$token" && "$token" != "null" ]]; then
+#         printf '%s\n' "$token"
+#         exit 0
+#     fi
+#
+#     exit 1
+# fi
 
 token="${!env_var_name:-}"
 

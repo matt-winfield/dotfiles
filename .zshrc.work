@@ -7,7 +7,7 @@ typeset -A GH_ORG_TOKEN_MAP=(
   "sg-ltd"        "SUPERGROUP_GITHUB_TOKEN"
 )
 
-# Resolve a GitHub token through 1Password (or the env var fallback).
+# Resolve a GitHub token through the GitHub CLI (or the env var fallback).
 gh_token_for_env_var() {
   local resolver
   resolver="$(command -v github-access-token 2>/dev/null || true)"

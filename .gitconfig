@@ -22,12 +22,12 @@
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
 
-# PAT for Sports-Global repos (prefers env var, then 1Password "Sports-Global GitHub Access Token")
+# Sports-Global repos use the Matt-Winfield-Derivco GitHub CLI token
 [credential "https://github.com/Sports-Global"]
 	helper =
 	helper = !~/dotfiles/bin/git-credential-sports-global
 
-# PAT for sg-ltd repos (prefers env var, then 1Password "SuperGroup GitHub Access Token")
+# sg-ltd repos use the Matthew-Winfield_sgltd GitHub CLI token
 [credential "https://github.com/sg-ltd"]
 	helper =
 	helper = !~/dotfiles/bin/git-credential-supergroup
