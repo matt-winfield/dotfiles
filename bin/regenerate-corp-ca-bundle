@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Regenerate a PEM bundle of all trusted root CAs on this Mac so tools that
+# read NODE_EXTRA_CA_CERTS (Node.js, npm, yarn, pnpm) can validate TLS chains
+# terminated by a corporate inspection CA installed in the keychain.
+#
+# macOS equivalent of the PowerShell script that dumps Cert:\LocalMachine\Root
+# and Cert:\CurrentUser\Root on Windows.
+
+set -euo pipefail
+
+out="${NODE_EXTRA_CA_CERTS:-$HOME/corp-ca-bundle.pem}"
+
+mkdir -p "$(dirname "$out")"
+
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+keychains=(
+  "/System/Library/Keychains/SystemRootCertificates.keychain"
+  "/Library/Keychains/System.keychain"
+  "$HOME/Library/Keychains/login.keychain-db"
+)
+
+: >"$tmp"
+
+for keychain in "${keychains[@]}"; do
+  if [[ -e "$keychain" ]]; then
+    security find-certificate -a -p "$keychain" >>"$tmp" 2>/dev/null || true
+  fi
+done
+
+if [[ ! -s "$tmp" ]]; then
+  echo "regenerate-corp-ca-bundle: no certificates were exported" >&2
+  exit 1
+fi
+
+mv "$tmp" "$out"
+chmod 644 "$out"
+
+count="$(grep -c '^-----BEGIN CERTIFICATE-----' "$out" || true)"
+echo "Wrote $count certificates to $out"

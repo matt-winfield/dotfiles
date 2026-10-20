@@ -1,0 +1,91 @@
+# Work laptop only. Sourced from .zshrc when the machine profile is "work".
+
+# Map of GitHub org -> env var name holding the PAT to use
+# Add entries as: "OrgName" "ENV_VAR_NAME"
+typeset -A GH_ORG_TOKEN_MAP=(
+  "Sports-Global" "SPORTS_GLOBAL_GITHUB_TOKEN"
+  "sg-ltd"        "SUPERGROUP_GITHUB_TOKEN"
+)
+
+# Resolve a GitHub token through 1Password (or the env var fallback).
+gh_token_for_env_var() {
+  local resolver
+  resolver="$(command -v github-access-token 2>/dev/null || true)"
+
+  if [[ -z "$resolver" ]]; then
+    resolver="$HOME/dotfiles/bin/github-access-token"
+  fi
+
+  "$resolver" "$1" 2>/dev/null
+}
+
+package_install_with_all_github_tokens() {
+  local sports_token supergroup_token
+  local -a env_args
+
+  if sports_token="$(gh_token_for_env_var SPORTS_GLOBAL_GITHUB_TOKEN)"; then
+    env_args+=(
+      "GITHUB_TOKEN=$sports_token"
+      "SPORTS_GLOBAL_GITHUB_TOKEN=$sports_token"
+    )
+  fi
+
+  if supergroup_token="$(gh_token_for_env_var SUPERGROUP_GITHUB_TOKEN)"; then
+    env_args+=(
+      "GH_PKG_SG_LTD_TOKEN=$supergroup_token"
+      "pnpm_config_//npm.pkg.github.com/:@sg-ltd:_authToken=$supergroup_token"
+    )
+  fi
+
+  env "${env_args[@]}" "$@"
+}
+
+pnpm() {
+  local pnpm_bin
+  pnpm_bin="$(whence -p pnpm)"
+
+  case "$1" in
+    install|i|add|update|up|upgrade|fetch|publish|dlx)
+      package_install_with_all_github_tokens "$pnpm_bin" "$@"
+      return
+      ;;
+  esac
+
+  "$pnpm_bin" "$@"
+}
+
+yarn() {
+  local yarn_bin
+  yarn_bin="$(whence -p yarn)"
+
+  if [[ $# -eq 0 || "$1" == "install" ]]; then
+    package_install_with_all_github_tokens "$yarn_bin" "$@"
+    return
+  fi
+
+  "$yarn_bin" "$@"
+}
+
+npm() {
+  local npm_bin
+  npm_bin="$(whence -p npm)"
+
+  if [[ "$1" == "install" || "$1" == "i" ]]; then
+    package_install_with_all_github_tokens "$npm_bin" "$@"
+    return
+  fi
+
+  "$npm_bin" "$@"
+}
+
+# pnpm
+export PNPM_HOME="/Users/Matthew.Winfield/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools

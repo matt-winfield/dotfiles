@@ -60,12 +60,55 @@ else
     echo "Karabiner Elements already installed"
 fi
 
+# Machine profile: "work" or "personal". See machine-profile.sh.
+# Personal-only tools are skipped on the work laptop until they are approved.
+source "$HOME/dotfiles/machine-profile.sh"
+machine_profile="$(dotfiles_machine_profile)"
+echo "Machine profile: $machine_profile"
+
+# Installed on every machine. gum is used in .zshrc for multi-choice aliases.
+common_tools=(
+    eza
+    zoxide
+    lazygit
+    fzf
+    atuin
+    starship
+    gh
+    nvm
+    zsh-autosuggestions
+    neovim
+    go
+    ripgrep
+    gum
+    thaw
+    bat
+    tmux
+)
+
+# Not approved for the work laptop yet.
+personal_tools=(
+    vorssaint
+)
+
+tools=("${common_tools[@]}")
+case "$machine_profile" in
+    personal)
+        tools+=("${personal_tools[@]}")
+        ;;
+    work)
+        echo "Skipping personal-only tools: ${personal_tools[*]}"
+        ;;
+    *)
+        echo "Unknown machine profile '$machine_profile' (expected work or personal). Skipping personal-only tools."
+        ;;
+esac
+
 # Install CLI tools if not already installed
-# gum is used in the zshrc file for multi-choice in alias functions
-for tool in eza zoxide lazygit fzf atuin starship gh nvm zsh-autosuggestions neovim go ripgrep gum vorssaint thaw bat tmux; do
-    if ! brew list $tool &>/dev/null; then
+for tool in "${tools[@]}"; do
+    if ! brew list "$tool" &>/dev/null; then
         echo "Installing $tool..."
-        brew install $tool
+        brew install "$tool"
     else
         echo "$tool already installed"
     fi
