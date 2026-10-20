@@ -2,6 +2,7 @@
     cmd+t                 New tab
     cmd+w                 Close tab / pane
     cmd+1 … cmd+9         Go to tab
+    ctrl+tab              Cycle tabs (shift: back)
     cmd+shift+] / [       Next / previous tab
     ctrl+b ,              Rename tab
 
@@ -13,6 +14,7 @@
     mouse drag border     Resize split
 
   Session
+    opt+tab               Cycle sessions (shift: back)
     ctrl+b S              New session
     ctrl+b d              Detach (keeps running)
     ctrl+b s              Pick a session

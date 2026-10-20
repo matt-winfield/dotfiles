@@ -13,9 +13,16 @@ command = /opt/homebrew/bin/tmux new-session -A -s main
 # so there's nothing to lose by skipping the "close this window?" prompt
 confirm-close-surface = false
 
-# Make the usual tab shortcuts drive tmux windows instead (tmux prefix is ctrl+b = \x02)
+# Make the usual tab shortcuts drive tmux windows instead (tmux prefix is ctrl+b = \x02).
+# ctrl+tab cycles windows in the session; opt+tab cycles sessions. Shift goes
+# backwards. Tab is a base-layer key, so these don't need the symbol layer
+# that [ and ] sit on. ) and ( are tmux's next / previous session.
 keybind = super+t=text:\x02c
 keybind = super+w=text:\x02X
+keybind = ctrl+tab=text:\x02n
+keybind = ctrl+shift+tab=text:\x02p
+keybind = alt+tab=text:\x02\x29
+keybind = alt+shift+tab=text:\x02\x28
 keybind = super+shift+]=text:\x02n
 keybind = super+shift+[=text:\x02p
 keybind = super+digit_1=text:\x021
