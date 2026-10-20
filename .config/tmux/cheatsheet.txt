@@ -13,8 +13,10 @@
     mouse drag border     Resize split
 
   Session
+    ctrl+b S              New session
     ctrl+b d              Detach (keeps running)
     ctrl+b s              Pick a session
+    ctrl+b $              Rename session
     ctrl+b [              Scroll / copy mode (q exits)
     ctrl+b r              Reload tmux config
 
