@@ -22,6 +22,12 @@ else
     echo "Homebrew already installed"
 fi
 
+# Third-party taps are ignored until each formula or cask is trusted.
+# Trust before other brew commands so installs and upgrades are not skipped.
+echo "Trusting third-party Homebrew packages..."
+brew trust --formula atlassian/acli/acli
+brew trust --cask nikitabobko/tap/aerospace
+
 # Clone dotfiles repo if not already present
 if [ ! -d ~/dotfiles ]; then
     echo "Cloning dotfiles repo..."
