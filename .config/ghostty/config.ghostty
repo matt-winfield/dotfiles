@@ -44,3 +44,7 @@ keybind = super+8=text:\x028
 keybind = super+digit_9=text:\x029
 keybind = super+9=text:\x029
 keybind = super+slash=text:\x02h
+# cmd+c copies the tmux selection. Ghostty has no selection of its own while
+# tmux owns the mouse, so send ctrl+shift+c as CSI-u and let tmux copy it.
+# Shift-drag still selects in Ghostty, but cmd+c will not copy that selection.
+keybind = super+c=csi:99;6u

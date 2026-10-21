@@ -22,6 +22,13 @@
     ctrl+b [              Scroll / copy mode (q exits)
     ctrl+b r              Reload tmux config
 
+  Selection
+    drag                  Select text
+    double-click          Select a word
+    triple-click          Select a line
+    cmd+c                 Copy selection
+    q or escape           Dismiss selection
+
   Help
     cmd+/  or  ctrl+b h   This cheat sheet
     ctrl+b ?              Every tmux binding
