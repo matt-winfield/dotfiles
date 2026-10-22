@@ -33,6 +33,8 @@ package_install_with_all_github_tokens() {
   if supergroup_token="$(gh_token_for_env_var SUPERGROUP_GITHUB_TOKEN)"; then
     env_args+=(
       "GH_PKG_SG_LTD_TOKEN=$supergroup_token"
+      # Package scripts read NODE_AUTH_TOKEN. pnpm strips pnpm_config_* auth keys before running them.
+      "NODE_AUTH_TOKEN=$supergroup_token"
       "pnpm_config_//npm.pkg.github.com/:@sg-ltd:_authToken=$supergroup_token"
     )
   fi
@@ -44,14 +46,7 @@ pnpm() {
   local pnpm_bin
   pnpm_bin="$(whence -p pnpm)"
 
-  case "$1" in
-    install|i|add|update|up|upgrade|fetch|publish|dlx)
-      package_install_with_all_github_tokens "$pnpm_bin" "$@"
-      return
-      ;;
-  esac
-
-  "$pnpm_bin" "$@"
+  package_install_with_all_github_tokens "$pnpm_bin" "$@"
 }
 
 yarn() {
