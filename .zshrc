@@ -14,7 +14,7 @@ if [[ "$(dotfiles_machine_profile)" == "work" ]]; then
   source "$HOME/dotfiles/.zshrc.work"
 fi
 
-# Create a new branch and worktree with the given name
+# Create a branch and worktree with the given name
 gwt() {
   local branchName="$1"
   local filesToCopy=(".env.local" ".env") # Define your own set of common files here
@@ -24,38 +24,47 @@ gwt() {
     return 1
   fi
 
-  # Determine base branch (main or master)
-  local baseBranch=""
-  if git show-ref --verify --quiet refs/heads/main; then
-    baseBranch="main"
-  elif git show-ref --verify --quiet refs/heads/master; then
-    baseBranch="master"
-  else
-    echo "Neither 'main' nor 'master' branch found." >&2
+  if ! git check-ref-format --branch "$branchName" > /dev/null 2>&1; then
+    echo "Invalid branch name: $branchName" >&2
     return 1
   fi
 
-  # Ensure base branch is up to date (safe for bare/worktree)
-  git fetch
-  git update-ref "refs/heads/$baseBranch" "origin/$baseBranch"
+  # Refresh remote refs without moving a checked-out local base branch.
+  if git remote get-url origin > /dev/null 2>&1; then
+    git fetch origin || return 1
+  fi
 
-  # Check if branch already exists
-  if git branch --list "$branchName" | grep -q "$branchName"; then
+  local baseBranch=""
+  baseBranch="$(_git_default_branch)" || return 1
+
+  local baseRef="$baseBranch"
+  if git show-ref --verify --quiet "refs/remotes/origin/$baseBranch"; then
+    baseRef="origin/$baseBranch"
+  fi
+
+  # Reuse a local branch, or create one from its remote counterpart when it exists.
+  if git show-ref --verify --quiet "refs/heads/$branchName"; then
     echo "Branch '$branchName' already exists. Re-using the existing branch."
+
+    if git show-ref --verify --quiet "refs/remotes/origin/$branchName" &&
+      ! git rev-parse --verify --quiet "$branchName@{upstream}" > /dev/null 2>&1; then
+      git branch --set-upstream-to="origin/$branchName" "$branchName" || return 1
+      echo "Branch '$branchName' now tracks origin/$branchName."
+    fi
+
+    git worktree add "$branchName" "$branchName" || return 1
+  elif git show-ref --verify --quiet "refs/remotes/origin/$branchName"; then
+    git worktree add --track -b "$branchName" "$branchName" "origin/$branchName" || return 1
+    echo "Created branch '$branchName' tracking origin/$branchName."
   else
-    git branch "$branchName" "$baseBranch"
+    git worktree add --no-track -b "$branchName" "$branchName" "$baseRef" || return 1
     echo "Created new branch: $branchName"
   fi
 
-  # Create the new worktree
-  git worktree add "$branchName" "$branchName"
-
-  # Determine source directory (main or master worktree)
+  # Determine source directory (the default branch worktree)
   local sourceDir="."
-  if [[ -d ".git/worktrees/master" ]]; then
-    sourceDir="./master"
-  elif [[ -d ".git/worktrees/main" ]]; then
-    sourceDir="./main"
+  if [[ -e "$baseBranch/.git" ]]; then
+    sourceDir="$baseBranch"
   fi
 
   # Copy common files
@@ -69,7 +78,7 @@ gwt() {
   done
 
   # Enter the new worktree directory and install dependencies
-  pushd "$branchName" > /dev/null
+  pushd "$branchName" > /dev/null || return 1
 
   if [[ -f "pnpm-lock.yaml" ]]; then
     pnpm install
@@ -98,14 +107,26 @@ Git_CloneBareWorktree() {
 
   [[ -z "$name" ]] && name="$basename"
 
-  mkdir -p "$name"
+  mkdir -p "$name" || return 1
   cd "$name" || return 1
 
-  git clone --bare "$url" .bare
-  echo "gitdir: ./.bare" > .git
+  git clone --bare "$url" .bare || return 1
+  echo "gitdir: ./.bare" > .git || return 1
 
-  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-  git fetch origin
+  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" || return 1
+  git fetch origin || return 1
+
+  local defaultBranch
+  defaultBranch="$(_git_default_branch)" || return 1
+
+  if git show-ref --verify --quiet "refs/heads/$defaultBranch"; then
+    git worktree add "$defaultBranch" "$defaultBranch" || return 1
+  else
+    git worktree add --track -b "$defaultBranch" "$defaultBranch" "origin/$defaultBranch" || return 1
+  fi
+
+  git branch --set-upstream-to="origin/$defaultBranch" "$defaultBranch" || return 1
+  echo "Created '$defaultBranch' worktree tracking origin/$defaultBranch."
 }
 
 alias clone-worktree=Git_CloneBareWorktree
@@ -142,6 +163,30 @@ ghpr() {
     --editor \
     --fill \
     $draft_flag
+}
+
+_git_default_branch() {
+  local remoteHead=""
+
+  if remoteHead="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2> /dev/null)"; then
+    remoteHead="${remoteHead#origin/}"
+    if git show-ref --verify --quiet "refs/remotes/origin/$remoteHead"; then
+      printf '%s\n' "$remoteHead"
+      return 0
+    fi
+  fi
+
+  local candidate
+  for candidate in main master; do
+    if git show-ref --verify --quiet "refs/remotes/origin/$candidate" ||
+      git show-ref --verify --quiet "refs/heads/$candidate"; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  echo "Could not determine the repository's default branch." >&2
+  return 1
 }
 
 # Initialise zoxide
