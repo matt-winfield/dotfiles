@@ -5,6 +5,7 @@
     ctrl+tab              Cycle tabs (shift: back)
     cmd+shift+] / [       Next / previous tab
     ctrl+b ,              Rename tab
+    ctrl+b < / >          Move tab left / right
 
   Splits (tmux panes)
     ctrl+b |              Split side by side
