@@ -238,30 +238,6 @@ export PATH=$PATH:$HOME/go/bin
 alias ls="eza"
 alias lg="lazygit"
 alias cat="bat"
-# place this after nvm initialization!
-autoload -U add-zsh-hook
-
-load-nvmrc() {
-  local nvmrc_path
-  nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version
-    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use
-    fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
 
 # Check that the function `starship_zle-keymap-select()` is defined.
 # xref: https://github.com/starship/starship/issues/3418
@@ -294,3 +270,8 @@ fi
 if [[ -n $TMUX && -n $GHOSTTY_RESOURCES_DIR ]]; then
   source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
 fi
+
+# Last, so nothing above (nvm use, PATH exports, ~/.zshrc.local) can put
+# another directory before the CommandVault shims. Editors like Cursor read
+# the environment without drawing a prompt, so the precmd hook never runs.
+[ -x "$HOME/.cargo/bin/cv" ] && eval "$("$HOME/.cargo/bin/cv" shell-init zsh)"  # commandvault
