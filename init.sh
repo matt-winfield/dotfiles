@@ -186,6 +186,9 @@ ln -sf ~/dotfiles/AGENTS.md ~/.claude/CLAUDE.md
 echo "Linking Claude Code settings..."
 mkdir -p ~/.claude/hooks
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
+# ctrl+x q opens the prompt-queue mod. It borrows `diff:back`, whose only
+# built-in handler runs inside the diff dialog, so the prompt leaves it free.
+ln -sf ~/dotfiles/claude/keybindings.json ~/.claude/keybindings.json
 for hook in ~/dotfiles/claude/hooks/*.sh; do
     chmod +x "$hook"
     ln -sf "$hook" ~/.claude/hooks/"$(basename "$hook")"
