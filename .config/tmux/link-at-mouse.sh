@@ -94,14 +94,20 @@ link_at_column() {
 }
 
 # Prints the first URL, mailto: or file path in a word, without the
-# punctuation around it.
+# punctuation around it. A bare file name like .tmux.conf or README.md only
+# counts when it exists in the pane's directory, so words like "e.g." don't.
 extract_link() {
   local scheme='[a-zA-Z][a-zA-Z0-9+.-]*://[^[:space:]]+'
   local mailto='mailto:[^[:space:]]+'
   local path='[A-Za-z0-9_.~-]*/[^[:space:]]+'
   local file_line='[A-Za-z0-9_.-]*\.[A-Za-z0-9]+:[0-9]+(:[0-9]+)?'
-  [[ $1 =~ ($scheme|$mailto|$path|$file_line) ]] || return 0
-  trim_trailing "${BASH_REMATCH[1]}"
+  local bare='[A-Za-z0-9_.-]*\.[A-Za-z0-9_-]+' name
+  if [[ $1 =~ ($scheme|$mailto|$path|$file_line) ]]; then
+    trim_trailing "${BASH_REMATCH[1]}"
+  elif [[ $1 =~ ($bare) ]]; then
+    name=$(trim_trailing "${BASH_REMATCH[1]}")
+    [[ -n $cwd && -e $cwd/$name ]] && printf '%s' "$name"
+  fi
 }
 
 # Drops trailing punctuation, and a ")" only when it has no matching "(", so
