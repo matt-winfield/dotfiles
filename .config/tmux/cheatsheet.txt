@@ -27,6 +27,7 @@
     drag                  Select text
     double-click          Select a word
     triple-click          Select a line
+    right-click           Open / copy link, copy, paste
     cmd+c                 Copy selection
     q or escape           Dismiss selection
 
