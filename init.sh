@@ -214,6 +214,21 @@ done
 echo "Linking .gitconfig..."
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 
+# Include the tracked SSH host configs. ~/.ssh/config stays untracked because
+# other tools (e.g. Conductor) add their own lines to it. The Include goes at
+# the top so it applies before any Host block.
+echo "Including dotfiles SSH config..."
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+touch ~/.ssh/config
+chmod 600 ~/.ssh/config
+ssh_include='Include ~/dotfiles/.ssh/config.d/*.conf'
+if ! grep -qxF "$ssh_include" ~/.ssh/config; then
+    { echo "$ssh_include"; echo; cat ~/.ssh/config; } >~/.ssh/config.tmp
+    mv ~/.ssh/config.tmp ~/.ssh/config
+    chmod 600 ~/.ssh/config
+fi
+
 # Make git credential helper scripts executable
 chmod +x ~/dotfiles/bin/github-access-token
 chmod +x ~/dotfiles/bin/git-credential-sports-global
